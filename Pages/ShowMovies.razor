@@ -1,0 +1,62 @@
+﻿@using InprocessWebSite.Data
+@inject IMovieService movieService
+
+<h3>ShowMovies</h3>
+<div class="col-md-6">
+    <a href='/movie/add' class="btn btn-primary" role="button">
+        <i class="fas fa-user-plus"></i>
+        Add Movie
+    </a>
+</div>
+
+@if (movieArray.Length == 0)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table table-striped align-middle table-bordered">
+        <thead class="table-success">
+            <tr>
+                <th>Id</th>
+                <th>Title</th>
+                <th>Genre</th>
+                <th>ReleaseDate</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var movie in movieArray)
+            {
+                <tr>
+                    <td>@movie.Id</td>
+                    <td>@movie.Title</td>
+                    <td>@movie.Genre</td>
+                    <td>@movie.ReleaseDate</td>
+                    <td>
+                        <a href='/movie/edit/@movie.Id' class="btn btn-outline-dark" role="button">
+                            Edit
+                        </a>
+                        <a href='/movie/delete/@movie.Id' class="btn btn-outline-danger" role="button">
+                            Delete
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+
+    </table>
+}
+@code {
+    protected Movie[] movieArray = [];
+   
+    protected override async Task OnInitializedAsync()
+    {
+        await GetMovies();
+    }
+   
+    protected async Task GetMovies()
+    {
+        movieArray = await movieService.GetMoviesAsync();       
+    }
+}
+
